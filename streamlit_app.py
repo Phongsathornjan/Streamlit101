@@ -47,5 +47,5 @@ elif page == "Chatbot":
 elif page == "Contact":
     st.header("📬 Contact Me")
     st.write("Feel free to reach out to me via email or LinkedIn.")
-    st.write("📧 Email: myemail@example.com")
-    st.write("🔗 LinkedIn: [My Profile](https://linkedin.com/in/myprofile)")
+    st.write("📧 Email: phong.janjamsai@gmail.com")
+    st.write("🔗 LinkedIn: [My Profile](https://www.linkedin.com/in/phongsathorn-janjamsai-128184259)")
