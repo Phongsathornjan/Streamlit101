@@ -1,17 +1,17 @@
 import streamlit as st  # ✅ import ก่อน
+from chatbot import chatbot
 
 st.set_page_config(page_title="My Portfolio", page_icon="🎨", layout="wide")
 
 def chat_with_llm(user_input):
     return "Hello! How can I assist you?"  
 
-st.title("🚀 Welcome to My Portfolio Website")
-
 # Sidebar Navigation
 st.sidebar.title("Navigation")
 page = st.sidebar.radio("Go to", ["Home", "Projects", "Chatbot", "Contact"])
 
 if page == "Home":
+    st.title("🚀 Welcome to My Portfolio Website")
     st.write("")
     col1, col2 = st.columns([1, 4])
 
@@ -19,11 +19,22 @@ if page == "Home":
         st.image("./asset/Me.png")
 
     with col2:
+        
         st.header("About Me", divider='gray')
         st.write("""
             Fourth-year Engineering student with a passion for programming 💻. I have experience in developing front-end (React) ⚛️ and backend (Node.js) 🔧 development, as well as Mobile Applications (Flutter) 📱. Additionally, I have worked on Deep Learning projects and am familiar with various tools for Deep Learning and image processing, such as OpenCV, TensorFlow, and YOLO. Skilled in model training and optimization.
         """)
+        
         st.subheader("Tech Stack", divider="gray")
+        
+        Programming_Languages = ["HTML", "CSS", "PHP" ,"JavaScript", "TypeScript" , "Go" , "Python", "Java", "Dart"]
+        selection = st.pills("Programming Languages", Programming_Languages, selection_mode="single")
+        
+        Framework = ["Bootstrap", "Tailwind", "React" ,"Node.js", "Fiber" , "Flask" , "Flutter"]
+        selection = st.pills("Framework", Framework, selection_mode="single")
+                
+        Tools = ["Git", "Postman", "Docker" ,"AWS"]
+        selection = st.pills("Tools", Tools, selection_mode="single")
 
 elif page == "Projects":
     st.header("My Projects")
@@ -38,11 +49,29 @@ elif page == "Projects":
         st.divider()
 
 elif page == "Chatbot":
-    st.header("💬 Chat with AI")
-    user_input = st.text_input("Ask me anything:", "Hello!")
-    if st.button("Send"):
-        response = chat_with_llm(user_input)
-        st.write("🤖 AI:", response)
+    
+    if "messages" not in st.session_state:
+        st.session_state.messages = []
+
+    st.header("💬 Chat with AI to know more about me!")
+    st.write("")
+
+    for message in st.session_state.messages:
+        with st.chat_message(message["role"]):
+            st.write(message["content"])
+
+    if prompt := st.chat_input("Say something"):
+        st.session_state.messages.append({"role": "user", "content": prompt})
+        
+        response = chatbot(prompt)
+
+        st.session_state.messages.append({"role": "assistant", "content": response})
+
+        with st.chat_message("user"):
+            st.write(prompt)
+
+        with st.chat_message("assistant"):
+            st.write(response)
 
 elif page == "Contact":
     st.header("📬 Contact Me")
