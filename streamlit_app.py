@@ -49,27 +49,40 @@ elif page == "Projects":
         st.divider()
 
 elif page == "Chatbot":
-    
-    if "messages" not in st.session_state:
-        st.session_state.messages = []
 
     st.header("💬 Chat with AI to know more about me!")
     st.write("")
+    
+    if "messages" not in st.session_state:
+        st.session_state.messages = [
+            {"role": "user", "content": "Who are you ?"},  # คำถามแรก
+        ]
 
+        # ให้ chatbot ตอบคำถาม
+        with st.spinner("Wait for it...", show_time=True):
+            response = chatbot("","Who are you ?")
+            st.session_state.messages.append({"role": "assistant", "content": response})
+
+    # แสดงข้อความใน chat history
     for message in st.session_state.messages:
         with st.chat_message(message["role"]):
             st.write(message["content"])
 
+    # รับข้อความจากผู้ใช้
     if prompt := st.chat_input("Say something"):
-        st.session_state.messages.append({"role": "user", "content": prompt})
-        
-        response = chatbot(prompt)
-
-        st.session_state.messages.append({"role": "assistant", "content": response})
-
+        # แสดงข้อความผู้ใช้ทันที
         with st.chat_message("user"):
             st.write(prompt)
+        
+        # บันทึกข้อความของผู้ใช้ลงใน session_state
+        st.session_state.messages.append({"role": "user", "content": prompt})
+        
+        # ส่งข้อความไปยัง chatbot และเก็บคำตอบ   
+        with st.spinner("Wait for it...", show_time=True):
+            response = chatbot(st.session_state.messages,prompt)
+            st.session_state.messages.append({"role": "assistant", "content": response})
 
+        # แสดงคำตอบจาก chatbot
         with st.chat_message("assistant"):
             st.write(response)
 
